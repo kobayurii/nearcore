@@ -441,17 +441,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b34d609dfbaf33d6889b2b7106d3ca345eacad44200913df5ba02bfd31d2ba9"
 
 [[package]]
-name = "async-recursion"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30c5ef0ede93efbf733c1a727f3b6b5a1060bbedd5600183e66f6e4be4af0ec5"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.32",
-]
-
-[[package]]
 name = "async-stream"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3868,8 +3857,8 @@ version = "1.39.0"
 dependencies = [
  "actix",
  "anyhow",
- "async-recursion",
  "futures",
+ "lazy_static",
  "near-chain-configs",
  "near-client",
  "near-crypto",
