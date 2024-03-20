@@ -5,8 +5,7 @@ use actix_cors::Cors;
 use actix_web::http::header;
 use actix_web::HttpRequest;
 use actix_web::{get, http, middleware, web, App, Error as HttpError, HttpResponse, HttpServer};
-use api::RpcRequest;
-pub use api::{RpcFrom, RpcInto};
+pub use api::{RpcFrom, RpcInto, RpcRequest};
 use futures::Future;
 use futures::FutureExt;
 use near_chain_configs::GenesisConfig;
@@ -19,6 +18,7 @@ use near_client::{
 };
 use near_client_primitives::types::GetSplitStorageInfo;
 pub use near_jsonrpc_client as client;
+pub use near_jsonrpc_primitives as primitives;
 use near_jsonrpc_primitives::errors::RpcError;
 use near_jsonrpc_primitives::message::{Message, Request};
 use near_jsonrpc_primitives::types::config::RpcProtocolConfigResponse;
