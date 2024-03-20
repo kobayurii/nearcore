@@ -21,7 +21,7 @@ mod status;
 mod transactions;
 mod validator;
 
-pub(crate) trait RpcRequest: Sized {
+pub trait RpcRequest: Sized {
     fn parse(value: Value) -> Result<Self, RpcParseError>;
 }
 
