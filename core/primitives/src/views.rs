@@ -1911,7 +1911,15 @@ pub struct ReceiptView {
     pub receipt_id: CryptoHash,
 
     pub receipt: ReceiptEnumView,
+    #[serde(default = "default_priority")]
     pub priority: u64,
+}
+
+// Default value used when deserializing ReceiptView which are missing either the `priority` field.
+// Data which is missing this field was serialized before the introduction of priority.
+// For ReceiptV0 ReceiptPriority::NoPriority => 0
+fn default_priority() -> u64 {
+    0
 }
 
 #[derive(
