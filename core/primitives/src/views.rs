@@ -1355,9 +1355,17 @@ pub struct SignedTransactionView {
     pub nonce: Nonce,
     pub receiver_id: AccountId,
     pub actions: Vec<ActionView>,
+    #[serde(default = "default_priority_fee")]
     pub priority_fee: u64,
     pub signature: Signature,
     pub hash: CryptoHash,
+}
+
+// Default value used when deserializing SignedTransactionView which are missing either the `priority_fee` field.
+// Data which is missing this field was serialized before the introduction of priority_fee.
+// priority_fee for Transaction::V0 => None,
+fn default_priority_fee() -> u64 {
+    0
 }
 
 impl From<SignedTransaction> for SignedTransactionView {
