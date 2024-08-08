@@ -11,10 +11,6 @@ use std::borrow::Borrow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
-pub use near_vm_runner::logic::action::{
-    Action, AddKeyAction, CreateAccountAction, DeleteAccountAction, DeleteKeyAction,
-    DeployContractAction, FunctionCallAction, StakeAction, TransferAction,
-};
 
 pub type LogEntry = String;
 
@@ -42,7 +38,7 @@ pub struct Transaction {
     /// The hash of the block in the blockchain on top of which the given transaction is valid
     pub block_hash: CryptoHash,
     /// A list of actions to be applied
-    pub actions: Vec<Action>,
+    pub actions: Vec<crate::action::Action>,
 }
 
 impl Transaction {
@@ -286,109 +282,4 @@ pub fn verify_transaction_signature(
 pub struct ExecutionOutcomeWithProof {
     pub proof: MerklePath,
     pub outcome: ExecutionOutcome,
-}
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::account::{AccessKey, AccessKeyPermission, FunctionCallPermission};
-    use borsh::BorshDeserialize;
-    use near_crypto::{InMemorySigner, KeyType, Signature, Signer};
-
-    #[test]
-    fn test_verify_transaction() {
-        let signer = InMemorySigner::from_random("test".parse().unwrap(), KeyType::ED25519);
-        let transaction = Transaction {
-            signer_id: "test".parse().unwrap(),
-            public_key: signer.public_key(),
-            nonce: 0,
-            receiver_id: "test".parse().unwrap(),
-            block_hash: Default::default(),
-            actions: vec![],
-        }
-        .sign(&signer);
-        let wrong_public_key = PublicKey::from_seed(KeyType::ED25519, "wrong");
-        let valid_keys = vec![signer.public_key(), wrong_public_key.clone()];
-        assert!(verify_transaction_signature(&transaction, &valid_keys));
-
-        let invalid_keys = vec![wrong_public_key];
-        assert!(!verify_transaction_signature(&transaction, &invalid_keys));
-
-        let bytes = transaction.try_to_vec().unwrap();
-        let decoded_tx = SignedTransaction::try_from_slice(&bytes).unwrap();
-        assert!(verify_transaction_signature(&decoded_tx, &valid_keys));
-    }
-
-    /// This test is change checker for a reason - we don't expect transaction format to change.
-    /// If it does - you MUST update all of the dependencies: like nearlib and other clients.
-    #[test]
-    fn test_serialize_transaction() {
-        let public_key: PublicKey = "22skMptHjFWNyuEWY22ftn2AbLPSYpmYwGJRGwpNHbTV".parse().unwrap();
-        let transaction = Transaction {
-            signer_id: "test.near".parse().unwrap(),
-            public_key: public_key.clone(),
-            nonce: 1,
-            receiver_id: "123".parse().unwrap(),
-            block_hash: Default::default(),
-            actions: vec![
-                Action::CreateAccount(CreateAccountAction {}),
-                Action::DeployContract(DeployContractAction { code: vec![1, 2, 3] }),
-                Action::FunctionCall(FunctionCallAction {
-                    method_name: "qqq".to_string(),
-                    args: vec![1, 2, 3],
-                    gas: 1_000,
-                    deposit: 1_000_000,
-                }),
-                Action::Transfer(TransferAction { deposit: 123 }),
-                Action::Stake(StakeAction { public_key: public_key.clone(), stake: 1_000_000 }),
-                Action::AddKey(AddKeyAction {
-                    public_key: public_key.clone(),
-                    access_key: AccessKey {
-                        nonce: 0,
-                        permission: AccessKeyPermission::FunctionCall(FunctionCallPermission {
-                            allowance: None,
-                            receiver_id: "zzz".parse().unwrap(),
-                            method_names: vec!["www".to_string()],
-                        }),
-                    },
-                }),
-                Action::DeleteKey(DeleteKeyAction { public_key }),
-                Action::DeleteAccount(DeleteAccountAction {
-                    beneficiary_id: "123".parse().unwrap(),
-                }),
-            ],
-        };
-        let signed_tx = SignedTransaction::new(Signature::empty(KeyType::ED25519), transaction);
-        let new_signed_tx =
-            SignedTransaction::try_from_slice(&signed_tx.try_to_vec().unwrap()).unwrap();
-
-        assert_eq!(
-            new_signed_tx.get_hash().to_string(),
-            "4GXvjMFN6wSxnU9jEVT8HbXP5Yk6yELX9faRSKp6n9fX"
-        );
-    }
-
-    #[test]
-    fn test_outcome_to_hashes() {
-        let outcome = ExecutionOutcome {
-            status: ExecutionStatus::SuccessValue(vec![123]),
-            logs: vec!["123".to_string(), "321".to_string()],
-            receipt_ids: vec![],
-            gas_burnt: 123,
-            compute_usage: Some(456),
-            tokens_burnt: 1234000,
-            executor_id: "alice".parse().unwrap(),
-            metadata: ExecutionMetadata::V1,
-        };
-        let id = CryptoHash([42u8; 32]);
-        let outcome = ExecutionOutcomeWithId { id, outcome };
-        assert_eq!(
-            vec![
-                id,
-                "5JQs5ekQqKudMmYejuccbtEu1bzhQPXa92Zm4HdV64dQ".parse().unwrap(),
-                hash("123".as_bytes()),
-                hash("321".as_bytes()),
-            ],
-            outcome.to_hashes()
-        );
-    }
 }

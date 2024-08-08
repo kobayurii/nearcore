@@ -14,8 +14,11 @@ use crate::merkle::PartialMerkleTree;
 use crate::num_rational::Ratio;
 use crate::sharding::{ShardChunkHeader, ShardChunkHeaderV3};
 use crate::transaction::{
+     SignedTransaction, Transaction,
+};
+use crate::action::{
     Action, AddKeyAction, CreateAccountAction, DeleteAccountAction, DeleteKeyAction,
-    DeployContractAction, FunctionCallAction, SignedTransaction, StakeAction, Transaction,
+    DeployContractAction, FunctionCallAction, StakeAction,
     TransferAction,
 };
 use crate::types::{AccountId, Balance, EpochId, EpochInfoProvider, Gas, Nonce};

@@ -4120,6 +4120,7 @@ version = "1.36.0"
 dependencies = [
  "arbitrary",
  "assert_matches",
+ "base64 0.21.0",
  "bencher",
  "borsh 0.10.2",
  "bytesize",
@@ -4135,7 +4136,6 @@ dependencies = [
  "near-primitives-core",
  "near-rpc-error-macro",
  "near-stdx",
- "near-vm-runner",
  "num-rational",
  "once_cell",
  "primitive-types",

@@ -1,3 +1,4 @@
+use std::fmt;
 use crate::runtime::migration_data::{MigrationData, MigrationFlags};
 use crate::{
     hash::CryptoHash,
@@ -5,8 +6,16 @@ use crate::{
     types::{Balance, BlockHeight, EpochHeight, EpochId, Gas},
     version::ProtocolVersion,
 };
-use near_vm_runner::logic::CompiledContractCache;
 use std::sync::Arc;
+
+// A plug to avoid importing the crate near-vm-runner.
+pub trait CompiledContractCache {}
+
+impl fmt::Debug for dyn CompiledContractCache {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Compiled contracts cache")
+    }
+}
 
 #[derive(Debug)]
 pub struct ApplyState {

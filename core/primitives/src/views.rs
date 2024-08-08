@@ -13,7 +13,6 @@ use crate::block_header::{BlockHeaderInnerRestV4, BlockHeaderV4};
 use crate::challenge::{Challenge, ChallengesResult};
 use crate::checked_feature;
 use crate::contract::ContractCode;
-use crate::delegate_action::{DelegateAction, SignedDelegateAction};
 use crate::errors::TxExecutionError;
 use crate::hash::{hash, CryptoHash};
 use crate::merkle::{combine_hash, MerklePath};
@@ -26,10 +25,14 @@ use crate::sharding::{
     ShardChunkHeaderV3,
 };
 use crate::transaction::{
-    Action, AddKeyAction, CreateAccountAction, DeleteAccountAction, DeleteKeyAction,
-    DeployContractAction, ExecutionMetadata, ExecutionOutcome, ExecutionOutcomeWithIdAndProof,
-    ExecutionStatus, FunctionCallAction, PartialExecutionOutcome, PartialExecutionStatus,
-    SignedTransaction, StakeAction, TransferAction,
+
+     ExecutionMetadata, ExecutionOutcome, ExecutionOutcomeWithIdAndProof,
+    ExecutionStatus,  PartialExecutionOutcome, PartialExecutionStatus,
+    SignedTransaction,
+};
+use crate::action::{
+    Action, AddKeyAction, CreateAccountAction, DeleteAccountAction, DeleteKeyAction, DeployContractAction,
+    FunctionCallAction, StakeAction, TransferAction, DelegateAction, SignedDelegateAction,
 };
 use crate::types::{
     AccountId, AccountWithPublicKey, Balance, BlockHeight, EpochHeight, EpochId, FunctionArgs, Gas,
@@ -44,7 +47,6 @@ use near_crypto::{PublicKey, Signature};
 use near_fmt::{AbbrBytes, Slice};
 use near_primitives_core::config::{ActionCosts, ExtCosts, ParameterCost, VMConfig};
 use near_primitives_core::runtime::fees::Fee;
-use near_vm_runner::logic::CompiledContractCache;
 use num_rational::Rational32;
 use serde_with::base64::Base64;
 use serde_with::serde_as;
@@ -77,6 +79,15 @@ pub struct ContractCodeView {
     #[serde_as(as = "Base64")]
     pub code: Vec<u8>,
     pub hash: CryptoHash,
+}
+
+// A plug to avoid importing the crate near-vm-runner.
+pub trait CompiledContractCache: {}
+
+impl fmt::Debug for dyn CompiledContractCache {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Compiled contracts cache")
+    }
 }
 
 /// State for the view call.

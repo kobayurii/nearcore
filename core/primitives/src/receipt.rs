@@ -1,7 +1,7 @@
 use crate::borsh::maybestd::collections::HashMap;
 use crate::hash::CryptoHash;
 use crate::serialize::dec_format;
-use crate::transaction::{Action, TransferAction};
+use crate::action::{Action, TransferAction};
 use crate::types::{AccountId, Balance, ShardId};
 use borsh::{BorshDeserialize, BorshSerialize};
 use near_crypto::{KeyType, PublicKey};
@@ -11,7 +11,21 @@ use serde_with::serde_as;
 use std::borrow::Borrow;
 use std::fmt;
 
-pub use near_vm_runner::logic::DataReceiver;
+#[derive(
+    BorshSerialize,
+    BorshDeserialize,
+    Hash,
+    Clone,
+    Debug,
+    PartialEq,
+    Eq,
+    serde::Serialize,
+    serde::Deserialize,
+)]
+pub struct DataReceiver {
+    pub data_id: CryptoHash,
+    pub receiver_id: AccountId,
+}
 
 /// Receipts are used for a cross-shard communication.
 /// Receipts could be 2 types (determined by a `ReceiptEnum`): `ReceiptEnum::Action` of `ReceiptEnum::Data`.

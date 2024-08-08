@@ -6,8 +6,8 @@ pub use near_primitives_core::hash;
 pub use near_primitives_core::num_rational;
 pub use near_primitives_core::profile;
 pub use near_primitives_core::serialize;
-pub use near_vm_runner::logic::{delegate_action, signable_message};
 
+pub mod action;
 pub mod block;
 pub mod block_header;
 pub mod challenge;
