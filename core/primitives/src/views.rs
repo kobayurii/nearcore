@@ -830,11 +830,11 @@ pub struct BlockHeaderView {
     pub gas_price: Balance,
     pub block_ordinal: Option<NumBlocks>,
     /// TODO(2271): deprecated.
-    #[serde(with = "dec_format")]
+    #[serde(with = "dec_format", default)]
     #[cfg_attr(feature = "schemars", schemars(with = "String"))]
     pub rent_paid: Balance,
     /// TODO(2271): deprecated.
-    #[serde(with = "dec_format")]
+    #[serde(with = "dec_format", default)]
     #[cfg_attr(feature = "schemars", schemars(with = "String"))]
     pub validator_reward: Balance,
     #[serde(with = "dec_format")]
@@ -1006,11 +1006,11 @@ pub struct ChunkHeaderView {
     pub gas_used: Gas,
     pub gas_limit: Gas,
     /// TODO(2271): deprecated.
-    #[serde(with = "dec_format")]
+    #[serde(with = "dec_format", default)]
     #[cfg_attr(feature = "schemars", schemars(with = "String"))]
     pub rent_paid: Balance,
     /// TODO(2271): deprecated.
-    #[serde(with = "dec_format")]
+    #[serde(with = "dec_format", default)]
     #[cfg_attr(feature = "schemars", schemars(with = "String"))]
     pub validator_reward: Balance,
     #[serde(with = "dec_format")]
@@ -1160,6 +1160,7 @@ impl From<ChunkHeaderView> for ShardChunkHeader {
 pub struct BlockView {
     pub author: AccountId,
     pub header: BlockHeaderView,
+    #[serde(default)]
     pub chunks: Vec<ChunkHeaderView>,
 }
 
