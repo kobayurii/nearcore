@@ -1160,7 +1160,6 @@ impl From<ChunkHeaderView> for ShardChunkHeader {
 pub struct BlockView {
     pub author: AccountId,
     pub header: BlockHeaderView,
-    #[serde(default)]
     pub chunks: Vec<ChunkHeaderView>,
 }
 

@@ -8763,7 +8763,6 @@
             "$ref": "#/components/schemas/AccountId"
           },
           "chunks": {
-            "default": [],
             "items": {
               "$ref": "#/components/schemas/ChunkHeaderView"
             },
@@ -8775,7 +8774,8 @@
         },
         "required": [
           "author",
-          "header"
+          "header",
+          "chunks"
         ],
         "type": "object"
       },
