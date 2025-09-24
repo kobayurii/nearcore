@@ -2609,6 +2609,7 @@
             "$ref": "#/components/schemas/CryptoHash"
           },
           "rent_paid": {
+            "default": "0",
             "description": "TODO(2271): deprecated.",
             "type": "string"
           },
@@ -2634,6 +2635,7 @@
             "type": "array"
           },
           "validator_reward": {
+            "default": "0",
             "description": "TODO(2271): deprecated.",
             "type": "string"
           }
@@ -2657,8 +2659,6 @@
           "validator_proposals",
           "chunk_mask",
           "gas_price",
-          "rent_paid",
-          "validator_reward",
           "total_supply",
           "challenges_result",
           "last_final_block",
@@ -2830,6 +2830,7 @@
             "$ref": "#/components/schemas/CryptoHash"
           },
           "rent_paid": {
+            "default": "0",
             "description": "TODO(2271): deprecated.",
             "type": "string"
           },
@@ -2849,6 +2850,7 @@
             "type": "array"
           },
           "validator_reward": {
+            "default": "0",
             "description": "TODO(2271): deprecated.",
             "type": "string"
           }
@@ -2865,8 +2867,6 @@
           "shard_id",
           "gas_used",
           "gas_limit",
-          "rent_paid",
-          "validator_reward",
           "balance_burnt",
           "outgoing_receipts_root",
           "tx_root",
@@ -8763,6 +8763,7 @@
             "$ref": "#/components/schemas/AccountId"
           },
           "chunks": {
+            "default": [],
             "items": {
               "$ref": "#/components/schemas/ChunkHeaderView"
             },
@@ -8774,8 +8775,7 @@
         },
         "required": [
           "author",
-          "header",
-          "chunks"
+          "header"
         ],
         "type": "object"
       },
